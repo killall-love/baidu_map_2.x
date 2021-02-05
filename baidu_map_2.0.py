@@ -27,10 +27,10 @@ def exce_node_js_obj_data(top, right, level):
     """)
     sleep(1)
     print('获取点位成功')
-    get_tiles(nodejs.call("getMapData", top, right, level))
+    get_tiles(nodejs.call("getMapData", top, right, level), level)
 
 
-def get_tiles(obj):
+def get_tiles(obj, z):
     xidx = obj['x']
     yidx = obj['y']
     print('开始爬虫！！！')
@@ -42,18 +42,18 @@ def get_tiles(obj):
         for x in range(xidx[0], xidx[1]+1):
             url = "http://maponline{i}.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl" \
                 "&scaler=1&udt={t}&from=jsapi2_0".format(
-                    i=randint(0, 3), x=x, y=y, z=zoom_level, t=time.strftime("%Y%m%d", time.localtime()))
+                    i=randint(0, 3), x=x, y=y, z=z, t=time.strftime("%Y%m%d", time.localtime()))
             save_pictures_via_url(url)
     sleep(1)
     global ing_b
-    ing_b = 0
+    ing_b = False
     sleep(1)
     openFile()
 
 
 def ing():
     index = ["/", "─", "\\", ]
-    while bool(int(ing_b)):
+    while ing_b:
         for i in range(len(index)):
             print("\r"+index[i], end="")
             sleep(0.2)
@@ -89,16 +89,15 @@ def save_pictures_via_url(url):
 
 
 if __name__ == "__main__":
-    curpath = os.path.dirname(os.path.realpath(__file__))
-    cfgpath = os.path.join(curpath, "config.ini")
     conf = configparser.ConfigParser()
-    conf.read(cfgpath, encoding="utf-8")
-    top = conf.get("lan666", "top")
-    right = conf.get("lan666", "right")
-    zoom_level = conf.get("lan666", "zoom_level")
-    ing_b = conf.get("lan666", "ing_b")
-    file_name = conf.get("lan666", "file_name")
+    conf.read(os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), "config.ini"), encoding="utf-8")
+    keys = ['top', 'right', 'zoom_level', 'ing_b', 'file_name']
+    param = []
+    for key in keys:
+        param.append(conf.get('lan666', key))
+    ing_b = bool(int(param[3]))
+    file_name = param[4]
     path = os.getcwd()+"\\map\\"+file_name+"\\"
-
     print('程序初始化正常')
-    exce_node_js_obj_data(top, right, zoom_level)
+    exce_node_js_obj_data(param[0], param[1], param[2])
