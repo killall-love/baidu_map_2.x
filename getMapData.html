@@ -1,0 +1,54 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>坐标获取信息</title>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ePXP4n7s6rdHxGxehb6yDsloZ0Xfm94p"></script>
+    </head>
+    <body>
+    <div style="height:850px;border:1px solid gray" id="container"></div>
+    <p><input id="startBtn" type="button" onclick=" if(points.length != 5){ alert('请重新选择区域') }else{key = true;alert('请打开控制台');getPoints()} " value="下载" />
+    <input type="button" onclick="map.clearOverlays();key = false;document.getElementById('info').innerHTML = '';points=[];" value="清除" /></p>
+    <div id="info"></div>
+    <input id="getLMap" type="hidden"/>
+    </body>
+    </html>
+    <script type="text/javascript">
+    var map = new BMap.Map("container");// 创建Map实例
+    var point = new BMap.Point(109.19795,34.709931);
+	map.centerAndZoom(point,19);
+	map.enableScrollWheelZoom();
+    var key = false;    //开关
+    var newpoint;   //一个经纬度点
+    var points = [];    //数组，放经纬度信息
+    var polyline = new BMap.Polyline(); //折线覆盖物 
+
+    function startTool(){   //开关函数
+        if(points.length != 5){
+            return false;
+        }
+        return key;
+    }
+
+    map.addEventListener("click",function(e){   //单击地图，形成折线覆盖物
+        newpoint = new BMap.Point(e.point.lng,e.point.lat);
+        var markerhead = new BMap.Marker(newpoint);        // 创建标注  
+        map.addOverlay(markerhead);                     // 将标注添加到地图中
+    
+        points.push(newpoint);  //将新增的点放到数组中
+        polyline.setPath(points);   //设置折线的点数组
+        map.addOverlay(polyline);   //将折线添加到地图上
+    });
+    
+    map.addEventListener("dblclick",function(e){   //双击地图，形成多边形覆盖物
+            map.disableDoubleClickZoom();   //关闭双击放大
+            var polygon = new BMap.Polygon(points);
+            map.addOverlay(polygon);   //将折线添加到地图上
+    });
+    function getPoints(){
+        // console.log(JSON.stringify(points))
+        console.log("Top--->",JSON.stringify([points[0].lat,points[0].lng]))
+        console.log("Right--->",JSON.stringify([points[3].lat,points[3].lng]))
+        return JSON.stringify(points)
+    }
+    </script>
