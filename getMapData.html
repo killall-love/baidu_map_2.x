@@ -3,7 +3,7 @@
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>坐标获取信息</title>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=你的Key"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FPRc7A2QAXRzWpypUgxj8eY0tbublw8n"></script>
     </head>
     <body>
     <div style="height:850px;border:1px solid gray" id="container"></div>
@@ -47,8 +47,8 @@
     });
     function getPoints(){
         // console.log(JSON.stringify(points))
-        console.log("Top--->",JSON.stringify([points[0].lat,points[0].lng]))
-        console.log("Right--->",JSON.stringify([points[3].lat,points[3].lng]))
+        console.log("Top--->",JSON.stringify([points[0].lng,points[0].lat]))
+        console.log("Right--->",JSON.stringify([points[3].lng,points[3].lat]))
         return JSON.stringify(points)
     }
     </script>
